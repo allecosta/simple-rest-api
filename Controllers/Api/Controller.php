@@ -3,15 +3,36 @@
 class Controller 
 {
     /**
-     * Invocando o método magico __call()
+     * Invocando o método mágico __call()
      *
-     * @param [strings] $name
-     * @param [strings] $args
+     * @param [string] $name
+     * @param [string] $args
      * @return void
      */
     public function __call($name, $args) 
     {
         $this->sendOutPut('' ['HTTP/1.1 404 NOT FOUND']);
+    }
+
+    /**
+     * Envia a saída da API
+     *
+     * @param [mixed] $data
+     * @param array $httpHeaders
+     * @return void
+     */
+    protected function sendOutPut($data, $httpHeaders = []) 
+    {
+        header_remove(('Set-Cookie'));
+
+        if (is_array($httpHeaders) && count($httpHeaders)) {
+            foreach ($httpHeaders as $httpHeader) {
+                header($httpHeader);
+            }
+        }
+
+        echo $data;
+        exit;
     }
 
     /**
@@ -36,25 +57,5 @@ class Controller
     {
         return parse_str($_SERVER['QUERY_STRING'], $SqlQuery);
     }
-
-    /**
-     * Envia a saída da API
-     *
-     * @param [mixed] $data
-     * @param array $httpHeaders
-     * @return void
-     */
-    protected function sendOutPut($data, $httpHeaders = []) 
-    {
-        header_remove(('Set-Cookie'));
-
-        if (is_array($httpHeaders) && count($httpHeaders)) {
-            foreach ($httpHeaders as $httpHeader) {
-                header($httpHeader);
-            }
-        }
-
-        echo $data;
-        exit;
-    }
+   
 }
